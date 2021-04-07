@@ -33,7 +33,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Product response",
+            "description": "Returns list of games",
             "schema": {
               "type": "array",
               "items": {
@@ -52,7 +52,7 @@
     },
     "/products/{id}": {
       "get": {
-        "description": "Returns a game by id",
+        "description": "Return a game by id",
         "operationId": "getProductById",
         "produces": [
           "application/json"
