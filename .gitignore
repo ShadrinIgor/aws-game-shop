@@ -1,2 +1,4 @@
 /.idea
 /product-service/node_modules/
+/product-service/coverage/
+/product-service/.serverless
