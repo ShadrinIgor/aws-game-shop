@@ -4,10 +4,12 @@ import {Products} from '../../products/products';
 import {formatJSONResponse} from "../../libs/apiGateway";
 
 export const getProductById = async (event) => {
+
     try {
         let result = {}
         let statusCode = 200;
-        const productId = +event.pathParameters?.productId;
+        const productId: string = event.pathParameters?.productId;
+        console.log('getProductById.id', productId);
         if (!productId) {
             statusCode = 422
         } else {
