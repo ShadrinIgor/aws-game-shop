@@ -1,4 +1,7 @@
 /.idea
+/import-service/node_modules/
+/import-service/coverage/
+/import-service/.serverless
 /product-service/node_modules/
 /product-service/coverage/
 /product-service/.serverless
