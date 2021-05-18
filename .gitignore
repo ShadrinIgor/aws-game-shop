@@ -5,3 +5,4 @@
 /product-service/node_modules/
 /product-service/coverage/
 /product-service/.serverless
+/sqs-sns/node_modules/
