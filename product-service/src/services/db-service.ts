@@ -21,6 +21,13 @@ export default class DbService {
         await client.query(sql);
     }
 
+    async getProductById(client, productId: string): Promise<Product[]> {
+        const sql = `SELECT p.*, s.count FROM ${this.PRODUCTS_TABLE} p, ${this.STOCKS_TABLE} s where s.${this.productIdField} = p.id AND p.id='${productId}'`;
+        console.log('getProductById.sql', sql);
+        const {rows: result} = await client.query(sql);
+        return result?.[0];
+    }
+
     async getAllProductsWithCount(client): Promise<Product[]> {
         const sql = `SELECT p.*, s.count FROM ${this.PRODUCTS_TABLE} p, ${this.STOCKS_TABLE} s where s.${this.productIdField} = p.id`;
         console.log('getAllProductsWithCount.sql', sql);
