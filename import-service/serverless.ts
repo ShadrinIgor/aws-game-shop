@@ -24,11 +24,12 @@ const serverlessConfiguration: AWS = {
         },
         environment: {
             AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-            PG_HOST: 'mydb.cxdn0u6xwgem.us-east-1.rds.amazonaws.com',
+            PG_HOST: '***.rds.amazonaws.com',
             PG_PORT: '5432',
             PG_DATABASE: 'mydb',
-            PG_USERNAME: 'postgres',
-            PG_PASSWORD: 'pA6r5nou77OIPtVqSU8d',
+            PG_USERNAME: '***',
+            PG_PASSWORD: '***',
+            SQS_URL: 'https://sqs.us-east-1.amazonaws.com/***',
         },
         lambdaHashingVersion: '20201221',
         iam: {
@@ -54,6 +55,11 @@ const serverlessConfiguration: AWS = {
                         Action: ['s3:*'],
                         Resource: `*`,
                         // Resource: `arn:aws:s3:::${IMPORT_BUCKET_NAME}/*`,
+                    },
+                    {
+                        Effect: 'Allow',
+                        Action: ['sqs:*'],
+                        Resource: 'arn:aws:sqs:us-east-1:***:catalogItemsQueue',
                     }
                 ],
             }
@@ -68,6 +74,11 @@ const serverlessConfiguration: AWS = {
                 Effect: 'Allow',
                 Action: ['s3:*'],
                 Resource: 'arn:aws:s3:::game-store-uploaded/*',
+            },
+            {
+                Effect: 'Allow',
+                Action: ['sqs:*'],
+                Resource: 'arn:aws:sqs:us-east-1:***:catalogItemsQueue',
             }
         ],
     },
