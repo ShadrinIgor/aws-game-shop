@@ -10,6 +10,7 @@ export default class DbService {
 
     async createNewItemInTable(client, tableName: string, fields: string[], values: (string | number)[]): Promise<string> {
         const sql = `insert into ${tableName} (${fields.join(',')}) values ('${values.join('\',\'')}') RETURNING id`;
+        console.log('createNewItemInTable.sql', sql);
         const {rows: result} = await client.query(sql);
         console.log('createNewItemInTable.result', result);
         return result?.[0].id;

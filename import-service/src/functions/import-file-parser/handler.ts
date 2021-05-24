@@ -1,5 +1,5 @@
 import * as AWS from 'aws-sdk';
-import {S3} from 'aws-sdk';
+import {S3, SQS} from 'aws-sdk';
 import * as stream from 'stream';
 import * as csv from 'csv-parser';
 
@@ -17,9 +17,11 @@ const PARSED_FOLDER = 'parsed';
 // const dbService = new DbService();
 const BUCKET = 'game-store-uploaded';
 const ERROR_HAPPENED = 'ERROR_HAPPENED';
+const sqs = new SQS();
+
 
 export const importFileParser = async (event) => {
-    console.log('importProductsFile');
+    console.log('importProductsFile', event);
 
     await parseFiles(event);
 
@@ -43,9 +45,10 @@ async function parseFiles(event) {
                 Key: recordKey
             }).promise();
 
+            console.log('body', (s3Object as S3.Types.GetObjectOutput).Body);
+
             const objectStream = new stream.Readable();
-            objectStream._read = () => {
-            };
+            objectStream._read = () => {};
             objectStream.push((s3Object as S3.Types.GetObjectOutput).Body);
 
             objectStream
@@ -53,6 +56,7 @@ async function parseFiles(event) {
                 .on('data', async function (data) {
                         this.pause();
                         console.log('stream.data', data);
+                        await sendInSQS(data);
                         this.resume();
                     }
                 )
@@ -61,11 +65,29 @@ async function parseFiles(event) {
                         console.log('stream.end');
                     }
                 )
-
+                .on('error', async function (error) {
+                        this.pause();
+                        console.log('stream.error', error);
+                    }
+                )
         }
     } catch (e) {
         return formatJSONResponse(422, ERROR_HAPPENED)
     }
+}
+
+/**
+ * Send products data in the SQS queue
+ * @param productData
+ */
+async function sendInSQS(productData): Promise<void> {
+    console.log('sendInSQS', productData);
+    const res = await sqs.sendMessage({
+        QueueUrl: process.env.SQS_URL,
+        MessageBody: JSON.stringify(productData)
+    }).promise();
+
+    console.log('sendInSQS.res', res);
 }
 
 /**
