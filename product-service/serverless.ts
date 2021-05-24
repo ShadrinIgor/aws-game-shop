@@ -82,7 +82,33 @@ const serverlessConfiguration: AWS = {
                         Ref: 'SNSCreateProductTopic'
                     }
                 }
-            }
+            },
+            SNSCatalogBatchProcessSubscriptionLowCount: {
+                Type: 'AWS::SNS::Subscription',
+                Properties: {
+                    Endpoint: '***@epam.com',
+                    Protocol: 'email',
+                    TopicArn: {
+                        Ref: 'SNSCreateProductTopic',
+                    },
+                    FilterPolicy: {
+                        products_count: [{ numeric: ['<=', 10] }],
+                    },
+                },
+            },
+            SNSCatalogBatchProcessSubscriptionHighrCount: {
+                Type: 'AWS::SNS::Subscription',
+                Properties: {
+                    Endpoint: '***@epam.com',
+                    Protocol: 'email',
+                    TopicArn: {
+                        Ref: 'SNSCreateProductTopic',
+                    },
+                    FilterPolicy: {
+                        products_count: [{ numeric: ['>', 10] }],
+                    },
+                },
+            },
         },
     },
     functions: {getProductById, getProductsList, createProduct, catalogBatchProcess},
